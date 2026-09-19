@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShuleHub | Holiday Study & Class Platform</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        edu: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                            800: '#0c4a6e',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        /* Custom scrollbars */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col selection:bg-edu-500 selection:text-white">
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- Header / Navigation -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo & Title -->
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-edu-600 to-indigo-600 flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-edu-500/30">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 class="text-xl font-extrabold text-slate-900 tracking-tight">ShuleHub</h1>
+                            <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">Holiday Edition</span>
+                        </div>
+                        <p class="text-xs text-slate-500 font-medium">Interactive Learning & Class Management</p>
+                    </div>
+                </div>
+
+                <!-- Role Switcher Toggle (Teacher vs Student Mode) -->
+                <div class="flex items-center gap-3 bg-slate-100 p-1.5 rounded-2xl border border-slate-200">
+                    <span class="text-xs font-bold text-slate-500 pl-2 hidden sm:inline"><i class="fa-solid fa-user-gear mr-1"></i> Mode:</span>
+                    <button id="roleTeacherBtn" onclick="switchRole('teacher')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-edu-700 shadow-sm flex items-center gap-1.5">
+                        <i class="fa-solid fa-chalkboard-user"></i> Teacher
+                    </button>
+                    <button id="roleStudentBtn" onclick="switchRole('student')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:text-slate-900 flex items-center gap-1.5">
+                        <i class="fa-solid fa-user-graduate"></i> Student
+                    </button>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <nav class="flex space-x-1 sm:space-x-8 border-t border-slate-100 overflow-x-auto no-scrollbar">
+                <button onclick="switchTab('dashboard')" id="tab-dashboard" class="nav-tab text-edu-600 border-edu-600 border-b-2 py-3 px-3 text-sm font-bold flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-chart-pie"></i> Dashboard
+                </button>
+                <button onclick="switchTab('classes')" id="tab-classes" class="nav-tab text-slate-500 hover:text-slate-700 py-3 px-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-video"></i> Live Classes
+                    <span id="classBadge" class="ml-1 px-2 py-0.5 text-xs rounded-full bg-emerald-100 text-emerald-800 font-bold">2 Active</span>
+                </button>
+                <button onclick="switchTab('assignments')" id="tab-assignments" class="nav-tab text-slate-500 hover:text-slate-700 py-3 px-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-book-open"></i> Assignments & Notes
+                </button>
+                <button onclick="switchTab('discussions')" id="tab-discussions" class="nav-tab text-slate-500 hover:text-slate-700 py-3 px-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-comments"></i> Group Discussions
+                </button>
+                <button onclick="switchTab('students')" id="tab-students" class="nav-tab text-slate-500 hover:text-slate-700 py-3 px-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-users"></i> Class Roster
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+
+        <!-- Announcement Banner -->
+        <div class="mb-8 p-4 rounded-2xl bg-gradient-to-r from-edu-600 to-indigo-600 text-white shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-xl shrink-0">
+                    <i class="fa-solid fa-bullhorn"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm sm:text-base">Holiday Revision Program is Active!</h3>
+                    <p class="text-xs sm:text-sm text-edu-100">Welcome students! Check the scheduled live video classes below and submit your weekly assignments on time.</p>
+                </div>
+            </div>
+            <button onclick="switchTab('classes')" class="px-4 py-2 rounded-xl bg-white text-edu-700 font-bold text-xs hover:bg-edu-50 transition-all shrink-0">
+                Join Today's Class <i class="fa-solid fa-arrow-right ml-1"></i>
+            </button>
+        </div>
+
+        <!-- 1. DASHBOARD TAB -->
+        <section id="content-dashboard" class="tab-content active space-y-8">
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Scheduled Live Classes</p>
+                        <h3 class="text-2xl font-black text-slate-900 mt-1" id="dashClassCount">2 Classes</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-video"></i>
+                    </div>
+                </div>
+
+                <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Active Assignments</p>
+                        <h3 class="text-2xl font-black text-slate-900 mt-1" id="dashAssignmentCount">3 Posts</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-file-signature"></i>
+                    </div>
+                </div>
+
+                <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Discussion Topics</p>
+                        <h3 class="text-2xl font-black text-slate-900 mt-1" id="dashForumCount">3 Threads</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+                </div>
+
+                <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Enrolled Students</p>
+                        <h3 class="text-2xl font-black text-slate-900 mt-1">28 Learners</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Upcoming Live Sessions Preview -->
+                <div class="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                        <h2 class="font-extrabold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-clock-rotate-left text-edu-600"></i> Next Live Classes
+                        </h2>
+                        <button onclick="switchTab('classes')" class="text-xs font-bold text-edu-600 hover:text-edu-700">View All</button>
+                    </div>
+                    <div id="dashboardClassesPreview" class="space-y-3">
+                        <!-- Dynamic preview injected here -->
+                    </div>
+                </div>
+
+                <!-- Recent Forum Activity Preview -->
+                <div class="lg:col-span-5 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                        <h2 class="font-extrabold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-fire text-amber-500"></i> Active Group Discussions
+                        </h2>
+                        <button onclick="switchTab('discussions')" class="text-xs font-bold text-edu-600 hover:text-edu-700">Go to Forums</button>
+                    </div>
+                    <div id="dashboardDiscussionsPreview" class="space-y-3">
+                        <!-- Dynamic preview injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. LIVE CLASSES TAB -->
+        <section id="content-classes" class="tab-content space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-slate-900">Live Online Classes</h2>
+                    <p class="text-sm text-slate-500">Join virtual video lessons on Google Meet, Zoom, or Teams during holiday schedule.</p>
+                </div>
+                <!-- Teacher Only Action Button -->
+                <button id="addClassBtn" onclick="toggleModal('addClassModal', true)" class="teacher-only px-5 py-2.5 rounded-xl bg-edu-600 hover:bg-edu-700 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-plus"></i> Post New Class Link
+                </button>
+            </div>
+
+            <!-- Live Class Cards List -->
+            <div id="classList" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Injected via JavaScript -->
+            </div>
+        </section>
+
+        <!-- 3. ASSIGNMENTS & RESOURCES TAB -->
+        <section id="content-assignments" class="tab-content space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-slate-900">Assignments & Study Materials</h2>
+                    <p class="text-sm text-slate-500">Download holiday revision packages, homework assignments, and past exam notes.</p>
+                </div>
+                <!-- Teacher Only Action Button -->
+                <button id="addAssignmentBtn" onclick="toggleModal('addAssignmentModal', true)" class="teacher-only px-5 py-2.5 rounded-xl bg-edu-600 hover:bg-edu-700 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Upload Resource / Assignment
+                </button>
+            </div>
+
+            <!-- Subject Filter Pills -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-2">
+                <button onclick="filterAssignments('all')" class="assign-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-edu-600 text-white shadow-sm">All Subjects</button>
+                <button onclick="filterAssignments('Mathematics')" class="assign-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">Mathematics</button>
+                <button onclick="filterAssignments('Sciences')" class="assign-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">Sciences</button>
+                <button onclick="filterAssignments('Languages')" class="assign-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">Languages & Humanities</button>
+            </div>
+
+            <div id="assignmentList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Injected via JavaScript -->
+            </div>
+        </section>
+
+        <!-- 4. GROUP DISCUSSIONS TAB -->
+        <section id="content-discussions" class="tab-content space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-slate-900">Student Discussion Groups & Forum</h2>
+                    <p class="text-sm text-slate-500">Ask questions, share ideas, and study together with classmate study groups.</p>
+                </div>
+                <button onclick="toggleModal('addThreadModal', true)" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-pen-to-square"></i> Start New Discussion
+                </button>
+            </div>
+
+            <!-- Discussions Grid & Details Split -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Threads List -->
+                <div class="lg:col-span-5 space-y-4" id="threadsList">
+                    <!-- Injected via JS -->
+                </div>
+
+                <!-- Thread Detail View -->
+                <div class="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col min-h-[500px]" id="threadDetailView">
+                    <!-- Default message or selected thread content injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. STUDENT ROSTER TAB -->
+        <section id="content-students" class="tab-content space-y-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-slate-900">Enrolled Holiday Learners</h2>
+                    <p class="text-sm text-slate-500">Track student attendance, assignment submissions, and active group participation.</p>
+                </div>
+                <div class="px-4 py-2 bg-slate-100 rounded-xl text-xs font-bold text-slate-600">
+                    Total: 28 Students Registered
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 font-bold text-xs uppercase border-b border-slate-200">
+                                <th class="py-4 px-6">Student Name</th>
+                                <th class="py-4 px-6">Grade / Level</th>
+                                <th class="py-4 px-6">Class Attendance</th>
+                                <th class="py-4 px-6">Assignments Turned In</th>
+                                <th class="py-4 px-6">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-sm font-medium" id="studentRosterTable">
+                            <!-- Injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODALS -->
+
+    <!-- Modal 1: Post New Class Link (Teacher Only) -->
+    <div id="addClassModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative">
+            <button onclick="toggleModal('addClassModal', false)" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h3 class="text-xl font-extrabold text-slate-900 mb-1">Schedule New Live Class</h3>
+            <p class="text-xs text-slate-500 mb-6">Share a video conference link (Zoom, Google Meet, Teams) with students.</p>
+            
+            <form id="addClassForm" onsubmit="handleCreateClass(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Lesson Topic / Title</label>
+                    <input type="text" id="classTopic" required placeholder="e.g. Quadratic Equations & Algebra" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-edu-500 outline-none text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Subject</label>
+                    <select id="classSubject" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-edu-500 outline-none text-sm bg-white">
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="Sciences">Sciences (Physics/Chem/Bio)</option>
+                        <option value="Languages">Languages & Literature</option>
+                        <option value="Humanities">Humanities & Social Studies</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Date</label>
+                        <input type="text" id="classDate" required placeholder="Tomorrow, 10:00 AM" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-edu-500 outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Platform</label>
+                        <select id="classPlatform" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-edu-500 outline-none text-sm bg-white">
+                            <option value="Google Meet">Google Meet</option>
+                            <option value="Zoom">Zoom</option>
+                            <option value="MS Teams">Microsoft Teams</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Class Meeting Link</label>
+                    <input type="url" id="classLink" required placeholder="https://meet.google.com/abc-defg-hij" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-edu-500 outline-none text-sm">
+                </div>
+                <button type="submit" class="w-full py-3 rounded-xl bg-edu-600 hover:bg-edu-700 text-white font-bold text-sm shadow-md transition-all mt-4">
+                    Publish Class Link
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 2: Post Assignment/Resource (Teacher Only) -->
+    <div id="addAssignmentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative">
+            <button onclick="toggleModal('addAssignmentModal', false)" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h3 class="text-xl font-extrabold text-slate-900 mb-1">Upload Work or Study Notes</h3>
+            <p class="text-xs text-slate-500 mb-6">Post revision exercises, holiday homework, or PDF reading materials.</p>
+            
+            <form id="addAssignmentForm" onsubmit="handleCreateAssignment(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Title</label>
+                    <input type="text" id="assignTitle" required placeholder="e.g. Form 3 Biology Revision Quiz #2" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-edu-500 outline-none text-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Category</label>
+                        <select id="assignSubject" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-edu-500 outline-none text-sm bg-white">
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Sciences">Sciences</option>
+                            <option value="Languages">Languages</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Due Date</label>
+                        <input type="text" id="assignDueDate" required placeholder="Friday, 5:00 PM" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-edu-500 outline-none text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Instructions / Description</label>
+                    <textarea id="assignDesc" rows="3" required placeholder="Explain what students need to complete..." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-edu-500 outline-none text-sm resize-none"></textarea>
+                </div>
+                <button type="submit" class="w-full py-3 rounded-xl bg-edu-600 hover:bg-edu-700 text-white font-bold text-sm shadow-md transition-all mt-4">
+                    Upload & Notify Class
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 3: Add Discussion Thread (Students & Teachers) -->
+    <div id="addThreadModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative">
+            <button onclick="toggleModal('addThreadModal', false)" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h3 class="text-xl font-extrabold text-slate-900 mb-1">Start Discussion Topic</h3>
+            <p class="text-xs text-slate-500 mb-6">Ask a question or form a study group with your classmates.</p>
+            
+            <form id="addThreadForm" onsubmit="handleCreateThread(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Topic Headline</label>
+                    <input type="text" id="threadTitle" required placeholder="e.g. How do you solve Question 4 in Chemistry assignment?" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Tag / Subject</label>
+                    <select id="threadTag" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-white">
+                        <option value="Study Group">Study Group</option>
+                        <option value="Math Help">Math Help</option>
+                        <option value="Science Query">Science Query</option>
+                        <option value="General Discussion">General Discussion</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Details / Question Content</label>
+                    <textarea id="threadContent" rows="4" required placeholder="Provide more context for your classmates or teacher..." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none text-sm resize-none"></textarea>
+                </div>
+                <button type="submit" class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md transition-all mt-4">
+                    Post to Forum
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 4: Student Submit Assignment Modal -->
+    <div id="submitAssignmentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative">
+            <button onclick="toggleModal('submitAssignmentModal', false)" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h3 class="text-xl font-extrabold text-slate-900 mb-1">Turn In Assignment</h3>
+            <p class="text-xs text-slate-500 mb-6" id="submitModalAssignTitle">Submitting work for teacher review</p>
+            
+            <form onsubmit="handleAssignmentSubmission(event)" class="space-y-4">
+                <input type="hidden" id="submitAssignId">
+                <div class="border-2 border-dashed border-slate-300 rounded-2xl p-6 text-center hover:bg-slate-50 cursor-pointer transition-colors" onclick="document.getElementById('simulatedFileInput').click()">
+                    <i class="fa-solid fa-cloud-arrow-up text-3xl text-edu-600 mb-2"></i>
+                    <p class="text-sm font-bold text-slate-700" id="fileNameDisplay">Click to attach completed work (PDF, DOCX, Image)</p>
+                    <p class="text-xs text-slate-400 mt-1">Maximum file size: 25 MB</p>
+                    <input type="file" id="simulatedFileInput" class="hidden" onchange="updateFileName(this)">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Notes to Teacher (Optional)</label>
+                    <textarea rows="2" placeholder="e.g. I found question 3 challenging but completed all sections." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-edu-500 outline-none text-sm resize-none"></textarea>
+                </div>
+                <button type="submit" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md transition-all">
+                    Submit Work Now
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT STATE LOGIC -->
+    <script>
+        // Global Application State
+        let currentRole = 'teacher'; // 'teacher' or 'student'
+        let selectedThreadId = 1;
+
+        // Mock Initial Data
+        let classesData = [
+            {
+                id: 1,
+                topic: "Holiday Math Intensive: Calculus & Vectors",
+                subject: "Mathematics",
+                date: "Today, 4:00 PM - 5:30 PM",
+                platform: "Google Meet",
+                link: "https://meet.google.com/demo-math-class",
+                status: "Live Soon"
+            },
+            {
+                id: 2,
+                topic: "Physics Paper 2 Revision & Experiments",
+                subject: "Sciences",
+                date: "Tomorrow, 10:00 AM",
+                platform: "Zoom",
+                link: "https://zoom.us/demo-physics-session",
+                status: "Scheduled"
+            }
+        ];
+
+        let assignmentsData = [
+            {
+                id: 1,
+                title: "Algebraic Graphing & Quadratics Worksheet",
+                subject: "Mathematics",
+                dueDate: "This Friday, 5:00 PM",
+                description: "Complete exercises 1 to 15 on page 42. Show all step-by-step working clearly.",
+                submitted: false
+            },
+            {
+                id: 2,
+                title: "Chemistry Organic Reactions Summary",
+                subject: "Sciences",
+                dueDate: "Next Monday, 9:00 AM",
+                description: "Read chapter 8 and draw reaction pathways for alkanes and alkenes.",
+                submitted: true
+            },
+            {
+                id: 3,
+                title: "English Essay: Character Analysis",
+                subject: "Languages",
+                dueDate: "Sunday, 11:59 PM",
+                description: "Write a 500-word essay discussing main themes in the holiday class set book.",
+                submitted: false
+            }
+        ];
+
+        let discussionsData = [
+            {
+                id: 1,
+                title: "How do we derive the quadratic formula step-by-step?",
+                author: "Sarah Jenkins (Student)",
+                tag: "Math Help",
+                votes: 8,
+                content: "Hey everyone! I was re-watching today's live class recording and got stuck on completing the square method. Can someone explain?",
+                replies: [
+                    { author: "Mr. Alex (Teacher)", text: "Great question Sarah! Start with ax² + bx + c = 0, divide everything by 'a', then complete the square for the x terms.", date: "2 hrs ago" },
+                    { author: "David Kim (Student)", text: "I found a great 3-minute summary diagram for this in our study folder too!", date: "1 hr ago" }
+                ]
+            },
+            {
+                id: 2,
+                title: "Physics Group Study: Preparing for Mock Exams",
+                author: "David Kim (Student)",
+                tag: "Study Group",
+                votes: 12,
+                content: "Anyone interested in forming a weekend study call on Discord or Zoom to go through past physics questions together?",
+                replies: [
+                    { author: "Anita Ray (Student)", text: "Count me in! Saturday afternoon works best for me.", date: "3 hrs ago" }
+                ]
+            },
+            {
+                id: 3,
+                title: "Recommended reading material for Literature homework",
+                author: "Mr. Alex (Teacher)",
+                tag: "General Discussion",
+                votes: 15,
+                content: "I have pinned extra study guides in the resources section for anyone working on this week's essay.",
+                replies: []
+            }
+        ];
+
+        let studentsData = [
+            { name: "Sarah Jenkins", grade: "Form 4 / Grade 12", attendance: "100%", submissions: "3 / 3", status: "Active" },
+            { name: "David Kim", grade: "Form 4 / Grade 12", attendance: "92%", submissions: "3 / 3", status: "Active" },
+            { name: "Anita Ray", grade: "Form 3 / Grade 11", attendance: "85%", submissions: "2 / 3", status: "Active" },
+            { name: "Brian Kiprop", grade: "Form 4 / Grade 12", attendance: "95%", submissions: "3 / 3", status: "Active" },
+            { name: "Grace Omondi", grade: "Form 3 / Grade 11", attendance: "78%", submissions: "1 / 3", status: "Needs Follow-up" }
+        ];
+
+        // -------------------------------------------------------------
+        // Core Tab & UI Functions
+        // -------------------------------------------------------------
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(el => {
+                el.classList.remove('text-edu-600', 'border-edu-600', 'border-b-2', 'font-bold');
+                el.classList.add('text-slate-500', 'font-medium');
+            });
+
+            document.getElementById(`content-${tabId}`).classList.add('active');
+            const activeNav = document.getElementById(`tab-${tabId}`);
+            activeNav.classList.add('text-edu-600', 'border-edu-600', 'border-b-2', 'font-bold');
+            activeNav.classList.remove('text-slate-500', 'font-medium');
+        }
+
+        function switchRole(role) {
+            currentRole = role;
+            const teacherBtn = document.getElementById('roleTeacherBtn');
+            const studentBtn = document.getElementById('roleStudentBtn');
+            const teacherOnlyElements = document.querySelectorAll('.teacher-only');
+
+            if (role === 'teacher') {
+                teacherBtn.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-edu-700 shadow-sm flex items-center gap-1.5";
+                studentBtn.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:text-slate-900 flex items-center gap-1.5";
+                teacherOnlyElements.forEach(el => el.classList.remove('hidden'));
+                showToast("Switched to Teacher View. Full posting controls enabled.");
+            } else {
+                studentBtn.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-indigo-700 shadow-sm flex items-center gap-1.5";
+                teacherBtn.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:text-slate-900 flex items-center gap-1.5";
+                teacherOnlyElements.forEach(el => el.classList.add('hidden'));
+                showToast("Switched to Student View. Interactive learning mode.");
+            }
+            renderAll();
+        }
+
+        function toggleModal(modalId, show) {
+            const modal = document.getElementById(modalId);
+            if (show) modal.classList.remove('hidden');
+            else modal.classList.add('hidden');
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `p-4 rounded-xl bg-slate-900 text-white text-xs font-bold shadow-xl flex items-center gap-3 transform translate-y-4 opacity-0 transition-all pointer-events-auto border border-slate-700`;
+            toast.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400 text-base"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-4', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-4');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // -------------------------------------------------------------
+        // Render Functions
+        // -------------------------------------------------------------
+        function renderAll() {
+            renderDashboard();
+            renderClasses();
+            renderAssignments('all');
+            renderDiscussions();
+            renderThreadDetail(selectedThreadId);
+            renderRoster();
+        }
+
+        function renderDashboard() {
+            document.getElementById('dashClassCount').innerText = `${classesData.length} Active`;
+            document.getElementById('dashAssignmentCount').innerText = `${assignmentsData.length} Tasks`;
+            document.getElementById('dashForumCount').innerText = `${discussionsData.length} Topics`;
+
+            // Preview classes
+            const classContainer = document.getElementById('dashboardClassesPreview');
+            classContainer.innerHTML = classesData.map(c => `
+                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-edu-50 text-edu-600 flex items-center justify-center font-bold text-sm">
+                            <i class="fa-solid fa-video"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-xs text-slate-900">${c.topic}</h4>
+                            <p class="text-[11px] text-slate-500">${c.date} • ${c.platform}</p>
+                        </div>
+                    </div>
+                    <a href="${c.link}" target="_blank" class="px-3 py-1.5 rounded-lg bg-edu-600 text-white font-bold text-xs hover:bg-edu-700">Join</a>
+                </div>
+            `).join('');
+
+            // Preview discussions
+            const discussionContainer = document.getElementById('dashboardDiscussionsPreview');
+            discussionContainer.innerHTML = discussionsData.map(d => `
+                <div onclick="switchTab('discussions'); selectThread(${d.id});" class="p-3 rounded-xl hover:bg-slate-50 cursor-pointer border border-transparent hover:border-slate-200 transition-all flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                        <div>
+                            <h4 class="font-bold text-xs text-slate-800 line-clamp-1">${d.title}</h4>
+                            <p class="text-[11px] text-slate-400">${d.replies.length} replies • ${d.tag}</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-slate-300"></i>
+                </div>
+            `).join('');
+        }
+
+        function renderClasses() {
+            const container = document.getElementById('classList');
+            container.innerHTML = classesData.map(c => `
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between hover:border-edu-300 transition-all">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-extrabold px-3 py-1 rounded-full bg-edu-50 text-edu-700 border border-edu-200">${c.subject}</span>
+                            <span class="text-xs font-bold px-2.5 py-0.5 rounded-md ${c.status === 'Live Soon' ? 'bg-amber-100 text-amber-800 animate-pulse' : 'bg-slate-100 text-slate-600'}">${c.status}</span>
+                        </div>
+                        <h3 class="text-lg font-extrabold text-slate-900">${c.topic}</h3>
+                        <div class="space-y-1.5 text-xs text-slate-600 font-medium">
+                            <p class="flex items-center gap-2"><i class="fa-solid fa-calendar-day text-slate-400"></i> ${c.date}</p>
+                            <p class="flex items-center gap-2"><i class="fa-solid fa-desktop text-slate-400"></i> ${c.platform}</p>
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <a href="${c.link}" target="_blank" class="w-full text-center px-4 py-2.5 rounded-xl bg-edu-600 hover:bg-edu-700 text-white font-bold text-xs shadow-sm flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Live Class Link
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderAssignments(filter = 'all') {
+            const container = document.getElementById('assignmentList');
+            const filtered = filter === 'all' ? assignmentsData : assignmentsData.filter(a => a.subject === filter);
+
+            container.innerHTML = filtered.map(a => `
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-4">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700">${a.subject}</span>
+                            ${a.submitted ? 
+                                `<span class="text-xs font-extrabold text-emerald-600 flex items-center gap-1"><i class="fa-solid fa-check-circle"></i> Turned In</span>` : 
+                                `<span class="text-xs font-bold text-amber-600"><i class="fa-solid fa-hourglass-half"></i> Pending</span>`}
+                        </div>
+                        <h3 class="font-bold text-base text-slate-900 mb-2">${a.title}</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">${a.description}</p>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-100 space-y-3">
+                        <p class="text-xs text-slate-400 font-medium"><i class="fa-solid fa-clock mr-1"></i> Due: ${a.dueDate}</p>
+                        <div class="flex gap-2">
+                            <button onclick="showToast('Downloading revision assignment PDF...')" class="w-1/2 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-download"></i> Material
+                            </button>
+                            <button onclick="openSubmitModal(${a.id}, '${a.title}')" class="w-1/2 py-2 rounded-xl ${a.submitted ? 'bg-emerald-50 text-emerald-700' : 'bg-edu-600 text-white hover:bg-edu-700'} font-bold text-xs flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-upload"></i> ${a.submitted ? 'Resubmit' : 'Submit Work'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterAssignments(subject) {
+            document.querySelectorAll('.assign-filter-btn').forEach(btn => {
+                btn.className = "assign-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-600 hover:bg-slate-100 border border-slate-200";
+            });
+            event.target.className = "assign-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-edu-600 text-white shadow-sm";
+            renderAssignments(subject);
+        }
+
+        function renderDiscussions() {
+            const container = document.getElementById('threadsList');
+            container.innerHTML = discussionsData.map(t => `
+                <div onclick="selectThread(${t.id})" class="p-5 rounded-2xl bg-white border ${t.id === selectedThreadId ? 'border-indigo-500 ring-2 ring-indigo-100' : 'border-slate-200'} cursor-pointer hover:border-indigo-300 transition-all space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700">${t.tag}</span>
+                        <span class="text-xs font-bold text-slate-400 flex items-center gap-1"><i class="fa-regular fa-thumbs-up"></i> ${t.votes}</span>
+                    </div>
+                    <h3 class="font-extrabold text-sm text-slate-900 leading-snug">${t.title}</h3>
+                    <div class="flex items-center justify-between text-xs text-slate-500 font-medium">
+                        <span>${t.author}</span>
+                        <span>${t.replies.length} comments</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectThread(id) {
+            selectedThreadId = id;
+            renderDiscussions();
+            renderThreadDetail(id);
+        }
+
+        function renderThreadDetail(id) {
+            const container = document.getElementById('threadDetailView');
+            const thread = discussionsData.find(t => t.id === id);
+
+            if (!thread) {
+                container.innerHTML = `<div class="m-auto text-center text-slate-400 text-sm">Select a discussion thread to view replies</div>`;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="flex-grow space-y-6">
+                    <div class="border-b border-slate-100 pb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-extrabold px-3 py-1 rounded-full bg-indigo-50 text-indigo-700">${thread.tag}</span>
+                            <button onclick="upvoteThread(${thread.id})" class="px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5">
+                                <i class="fa-solid fa-thumbs-up text-indigo-600"></i> Upvote (${thread.votes})
+                            </button>
+                        </div>
+                        <h2 class="text-xl font-black text-slate-900 mb-2">${thread.title}</h2>
+                        <p class="text-xs font-bold text-slate-500">Posted by ${thread.author}</p>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 text-sm text-slate-700 leading-relaxed">
+                        ${thread.content}
+                    </div>
+
+                    <!-- Replies Section -->
+                    <div class="space-y-4">
+                        <h4 class="font-extrabold text-xs uppercase tracking-wider text-slate-400">Discussion Comments (${thread.replies.length})</h4>
+                        <div class="space-y-3">
+                            ${thread.replies.map(r => `
+                                <div class="p-3.5 rounded-xl bg-white border border-slate-200 text-xs space-y-1">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-extrabold text-slate-800">${r.author}</span>
+                                        <span class="text-[10px] text-slate-400">${r.date}</span>
+                                    </div>
+                                    <p class="text-slate-600">${r.text}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Comment Input -->
+                <div class="mt-6 pt-4 border-t border-slate-100">
+                    <form onsubmit="handlePostComment(event, ${thread.id})" class="flex gap-2">
+                        <input type="text" id="commentInput" required placeholder="Write a reply or answer..." class="flex-grow px-4 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 outline-none">
+                        <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm">
+                            Reply
+                        </button>
+                    </form>
+                </div>
+            `;
+        }
+
+        function renderRoster() {
+            const table = document.getElementById('studentRosterTable');
+            table.innerHTML = studentsData.map(s => `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="py-4 px-6 font-bold text-slate-900 flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-bold">
+                            ${s.name.split(' ').map(n=>n[0]).join('')}
+                        </div>
+                        ${s.name}
+                    </td>
+                    <td class="py-4 px-6 text-slate-600">${s.grade}</td>
+                    <td class="py-4 px-6 font-bold text-emerald-600">${s.attendance}</td>
+                    <td class="py-4 px-6 text-slate-600">${s.submissions}</td>
+                    <td class="py-4 px-6">
+                        <span class="px-2.5 py-1 rounded-full text-xs font-bold ${s.status === 'Active' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                            ${s.status}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // -------------------------------------------------------------
+        // Event Handlers
+        // -------------------------------------------------------------
+        function handleCreateClass(e) {
+            e.preventDefault();
+            const newClass = {
+                id: Date.now(),
+                topic: document.getElementById('classTopic').value,
+                subject: document.getElementById('classSubject').value,
+                date: document.getElementById('classDate').value,
+                platform: document.getElementById('classPlatform').value,
+                link: document.getElementById('classLink').value,
+                status: "Scheduled"
+            };
+
+            classesData.unshift(newClass);
+            toggleModal('addClassModal', false);
+            document.getElementById('addClassForm').reset();
+            renderAll();
+            showToast("New live class link created and broadcasted to students!");
+        }
+
+        function handleCreateAssignment(e) {
+            e.preventDefault();
+            const newAssign = {
+                id: Date.now(),
+                title: document.getElementById('assignTitle').value,
+                subject: document.getElementById('assignSubject').value,
+                dueDate: document.getElementById('assignDueDate').value,
+                description: document.getElementById('assignDesc').value,
+                submitted: false
+            };
+
+            assignmentsData.unshift(newAssign);
+            toggleModal('addAssignmentModal', false);
+            document.getElementById('addAssignmentForm').reset();
+            renderAll();
+            showToast("Assignment uploaded to student dashboard!");
+        }
+
+        function handleCreateThread(e) {
+            e.preventDefault();
+            const authorName = currentRole === 'teacher' ? "Mr. Alex (Teacher)" : "You (Student)";
+            const newThread = {
+                id: Date.now(),
+                title: document.getElementById('threadTitle').value,
+                author: authorName,
+                tag: document.getElementById('threadTag').value,
+                votes: 1,
+                content: document.getElementById('threadContent').value,
+                replies: []
+            };
+
+            discussionsData.unshift(newThread);
+            selectedThreadId = newThread.id;
+            toggleModal('addThreadModal', false);
+            document.getElementById('addThreadForm').reset();
+            renderAll();
+            showToast("New discussion topic published!");
+        }
+
+        function upvoteThread(id) {
+            const thread = discussionsData.find(t => t.id === id);
+            if (thread) {
+                thread.votes++;
+                renderDiscussions();
+                renderThreadDetail(id);
+            }
+        }
+
+        function handlePostComment(e, threadId) {
+            e.preventDefault();
+            const input = document.getElementById('commentInput');
+            const thread = discussionsData.find(t => t.id === threadId);
+            const authorName = currentRole === 'teacher' ? "Mr. Alex (Teacher)" : "You (Student)";
+
+            if (thread && input.value.trim() !== '') {
+                thread.replies.push({
+                    author: authorName,
+                    text: input.value.trim(),
+                    date: "Just now"
+                });
+                renderThreadDetail(threadId);
+                renderDiscussions();
+                showToast("Reply added to discussion!");
+            }
+        }
+
+        function openSubmitModal(id, title) {
+            document.getElementById('submitAssignId').value = id;
+            document.getElementById('submitModalAssignTitle').innerText = `Submitting work for: ${title}`;
+            toggleModal('submitAssignmentModal', true);
+        }
+
+        function updateFileName(input) {
+            if (input.files && input.files[0]) {
+                document.getElementById('fileNameDisplay').innerText = `Selected File: ${input.files[0].name}`;
+            }
+        }
+
+        function handleAssignmentSubmission(e) {
+            e.preventDefault();
+            const id = parseInt(document.getElementById('submitAssignId').value);
+            const item = assignmentsData.find(a => a.id === id);
+            if (item) {
+                item.submitted = true;
+            }
+            toggleModal('submitAssignmentModal', false);
+            renderAll();
+            showToast("Assignment submitted successfully to your teacher!");
+        }
+
+        // Initialize application on load
+        window.onload = function() {
+            renderAll();
+        };
+    </script>
+</body>
+</html>
