@@ -249,7 +249,7 @@
                     <h2 class="text-2xl font-extrabold text-slate-900">Student Discussion Groups & Forum</h2>
                     <p class="text-sm text-slate-500">Ask questions, share ideas, and study together with classmate study groups.</p>
                 </div>
-                <button onclick="toggleModal('addThreadModal', true)" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2">
+                <button onclick="handleRestrictedAction(function() { toggleModal('addThreadModal', true); }, 'start a discussion')" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2">
                     <i class="fa-solid fa-pen-to-square"></i> Start New Discussion
                 </button>
             </div>
@@ -612,7 +612,7 @@
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = `p-4 rounded-xl bg-slate-900 text-white text-xs font-bold shadow-xl flex items-center gap-3 transform translate-y-4 opacity-0 transition-all pointer-events-auto border border-slate-700`;
-            toast.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400 text-base"></i> <span>${message}</span>`;
+            toast.innerHTML = `<i class="fa-solid fa-circle-info text-amber-400 text-base"></i> <span>${message}</span>`;
             container.appendChild(toast);
 
             setTimeout(() => toast.classList.remove('translate-y-4', 'opacity-0'), 10);
@@ -620,6 +620,25 @@
                 toast.classList.add('opacity-0', 'translate-y-4');
                 setTimeout(() => toast.remove(), 300);
             }, 3500);
+        }
+
+        // Access Control Helper for Member-Only Actions
+        function handleRestrictedAction(actionCallback, actionName = "access this feature") {
+            if (!currentUser) {
+                showToast(`Please log in as a student or teacher to ${actionName}.`);
+                toggleModal('studentModal', true);
+            } else {
+                actionCallback();
+            }
+        }
+
+        function handleJoinClass(link) {
+            if (!currentUser) {
+                showToast("Please log in as a student to join live virtual classes.");
+                toggleModal('studentModal', true);
+            } else {
+                window.open(link, '_blank');
+            }
         }
 
         // Authentication Handlers
@@ -712,7 +731,7 @@
                             <p class="text-[11px] text-slate-500">${c.date} • ${c.platform}</p>
                         </div>
                     </div>
-                    <a href="${c.link}" target="_blank" class="px-3 py-1.5 rounded-lg bg-edu-600 text-white font-bold text-xs hover:bg-edu-700">Join</a>
+                    <button onclick="handleJoinClass('${c.link}')" class="px-3 py-1.5 rounded-lg bg-edu-600 text-white font-bold text-xs hover:bg-edu-700">Join</button>
                 </div>
             `).join('');
 
@@ -747,9 +766,9 @@
                         </div>
                     </div>
                     <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-                        <a href="${c.link}" target="_blank" class="w-full text-center px-4 py-2.5 rounded-xl bg-edu-600 hover:bg-edu-700 text-white font-bold text-xs shadow-sm flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Live Class Link
-                        </a>
+                        <button onclick="handleJoinClass('${c.link}')" class="w-full text-center px-4 py-2.5 rounded-xl bg-edu-600 hover:bg-edu-700 text-white font-bold text-xs shadow-sm flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> ${currentUser ? 'Open Live Class Link' : 'Login to Join Class'}
+                        </button>
                     </div>
                 </div>
             `).join('');
@@ -778,7 +797,7 @@
                             <a href="${a.fileUrl}" target="_blank" class="w-1/2 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1">
                                 <i class="fa-solid fa-download"></i> Material
                             </a>
-                            <button onclick="openSubmitModal(${a.id}, '${a.title}')" class="w-1/2 py-2 rounded-xl ${a.submitted ? 'bg-emerald-50 text-emerald-700' : 'bg-edu-600 text-white hover:bg-edu-700'} font-bold text-xs flex items-center justify-center gap-1">
+                            <button onclick="handleRestrictedAction(function() { openSubmitModal(${a.id}, '${a.title}'); }, 'submit homework')" class="w-1/2 py-2 rounded-xl ${a.submitted ? 'bg-emerald-50 text-emerald-700' : 'bg-edu-600 text-white hover:bg-edu-700'} font-bold text-xs flex items-center justify-center gap-1">
                                 <i class="fa-solid fa-upload"></i> ${a.submitted ? 'Resubmit' : 'Submit Work'}
                             </button>
                         </div>
@@ -832,7 +851,7 @@
                     <div class="border-b border-slate-100 pb-4">
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-xs font-extrabold px-3 py-1 rounded-full bg-indigo-50 text-indigo-700">${thread.tag}</span>
-                            <button onclick="upvoteThread(${thread.id})" class="px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5">
+                            <button onclick="handleRestrictedAction(function() { upvoteThread(${thread.id}); }, 'upvote topics')" class="px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5">
                                 <i class="fa-solid fa-thumbs-up text-indigo-600"></i> Upvote (${thread.votes})
                             </button>
                         </div>
@@ -862,7 +881,7 @@
 
                 <div class="mt-6 pt-4 border-t border-slate-100">
                     <form onsubmit="handlePostComment(event, ${thread.id})" class="flex gap-2">
-                        <input type="text" id="commentInput" required placeholder="Write a reply or answer..." class="flex-grow px-4 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 outline-none">
+                        <input type="text" id="commentInput" required placeholder="${currentUser ? 'Write a reply or answer...' : 'Log in to participate in the discussion...'}" class="flex-grow px-4 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 outline-none">
                         <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm">
                             Reply
                         </button>
@@ -964,9 +983,15 @@
 
         function handlePostComment(e, threadId) {
             e.preventDefault();
+            if (!currentUser) {
+                showToast("Please log in to reply to discussion threads.");
+                toggleModal('studentModal', true);
+                return;
+            }
+
             const input = document.getElementById('commentInput');
             const thread = discussionsData.find(t => t.id === threadId);
-            const authorName = currentUser ? `${currentUser.name} (${currentUser.role})` : "Guest Learner";
+            const authorName = `${currentUser.name} (${currentUser.role})`;
 
             if (thread && input.value.trim() !== '') {
                 thread.replies.push({
