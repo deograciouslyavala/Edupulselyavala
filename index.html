@@ -125,7 +125,6 @@
 
         <!-- 1. DASHBOARD TAB -->
         <section id="content-dashboard" class="tab-content active space-y-8">
-            <!-- Stats Overview -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-between">
                     <div>
@@ -169,7 +168,6 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <!-- Upcoming Live Sessions Preview -->
                 <div class="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-4">
                         <h2 class="font-extrabold text-slate-900 flex items-center gap-2">
@@ -177,12 +175,9 @@
                         </h2>
                         <button onclick="switchTab('classes')" class="text-xs font-bold text-edu-600 hover:text-edu-700">View All</button>
                     </div>
-                    <div id="dashboardClassesPreview" class="space-y-3">
-                        <!-- Dynamic preview injected here -->
-                    </div>
+                    <div id="dashboardClassesPreview" class="space-y-3"></div>
                 </div>
 
-                <!-- Recent Forum Activity Preview -->
                 <div class="lg:col-span-5 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-4">
                         <h2 class="font-extrabold text-slate-900 flex items-center gap-2">
@@ -190,9 +185,7 @@
                         </h2>
                         <button onclick="switchTab('discussions')" class="text-xs font-bold text-edu-600 hover:text-edu-700">Go to Forums</button>
                     </div>
-                    <div id="dashboardDiscussionsPreview" class="space-y-3">
-                        <!-- Dynamic preview injected here -->
-                    </div>
+                    <div id="dashboardDiscussionsPreview" class="space-y-3"></div>
                 </div>
             </div>
         </section>
@@ -204,16 +197,12 @@
                     <h2 class="text-2xl font-extrabold text-slate-900">Live Online Classes</h2>
                     <p class="text-sm text-slate-500">Join virtual video lessons on Google Meet, Zoom, or Teams during holiday schedule.</p>
                 </div>
-                <!-- Teacher Only Action Button -->
                 <button id="addClassBtn" onclick="toggleModal('addClassModal', true)" class="teacher-only hidden px-5 py-2.5 rounded-xl bg-edu-600 hover:bg-edu-700 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2">
                     <i class="fa-solid fa-plus"></i> Post New Class Link
                 </button>
             </div>
 
-            <!-- Live Class Cards List -->
-            <div id="classList" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Injected via JavaScript -->
-            </div>
+            <div id="classList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
         </section>
 
         <!-- 3. ASSIGNMENTS & RESOURCES TAB -->
@@ -223,13 +212,11 @@
                     <h2 class="text-2xl font-extrabold text-slate-900">Assignments & Study Materials</h2>
                     <p class="text-sm text-slate-500">Download holiday revision packages, homework assignments, and past exam notes.</p>
                 </div>
-                <!-- Teacher Only Action Button -->
                 <button id="addAssignmentBtn" onclick="toggleModal('addAssignmentModal', true)" class="teacher-only hidden px-5 py-2.5 rounded-xl bg-edu-600 hover:bg-edu-700 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2">
                     <i class="fa-solid fa-cloud-arrow-up"></i> Upload Resource / Assignment
                 </button>
             </div>
 
-            <!-- Subject Filter Pills -->
             <div class="flex items-center gap-2 overflow-x-auto pb-2">
                 <button onclick="filterAssignments('all')" class="assign-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-edu-600 text-white shadow-sm">All Subjects</button>
                 <button onclick="filterAssignments('Mathematics')" class="assign-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">Mathematics</button>
@@ -237,9 +224,7 @@
                 <button onclick="filterAssignments('Languages')" class="assign-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">Languages & Humanities</button>
             </div>
 
-            <div id="assignmentList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Injected via JavaScript -->
-            </div>
+            <div id="assignmentList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
         <!-- 4. GROUP DISCUSSIONS TAB -->
@@ -254,17 +239,9 @@
                 </button>
             </div>
 
-            <!-- Discussions Grid & Details Split -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <!-- Threads List -->
-                <div class="lg:col-span-5 space-y-4" id="threadsList">
-                    <!-- Injected via JS -->
-                </div>
-
-                <!-- Thread Detail View -->
-                <div class="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col min-h-[500px]" id="threadDetailView">
-                    <!-- Default message or selected thread content injected via JS -->
-                </div>
+                <div class="lg:col-span-5 space-y-4" id="threadsList"></div>
+                <div class="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col min-h-[500px]" id="threadDetailView"></div>
             </div>
         </section>
 
@@ -292,16 +269,14 @@
                                 <th class="py-4 px-6">Status</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100 text-sm font-medium" id="studentRosterTable">
-                            <!-- Injected via JS -->
-                        </tbody>
+                        <tbody class="divide-y divide-slate-100 text-sm font-medium" id="studentRosterTable"></tbody>
                     </table>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- AUTHENTICATION & CREATION MODALS -->
+    <!-- MODALS -->
 
     <!-- Modal 1: Student Login -->
     <div id="studentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
@@ -345,7 +320,7 @@
         </div>
     </div>
 
-    <!-- Modal 3: Post New Class Link (Teacher Only) -->
+    <!-- Modal 3: Post New Class Link -->
     <div id="addClassModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative">
             <button onclick="toggleModal('addClassModal', false)" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -391,20 +366,21 @@
         </div>
     </div>
 
-    <!-- Modal 4: Post Assignment/Resource (Teacher Only + Cloudinary Upload) -->
+    <!-- Modal 4: Post/Edit Assignment & Video (Teacher) -->
     <div id="addAssignmentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button onclick="toggleModal('addAssignmentModal', false)" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
-            <h3 class="text-xl font-extrabold text-slate-900 mb-1">Upload Work or Study Notes</h3>
-            <p class="text-xs text-slate-500 mb-6">Upload PDFs, Word docs, or images directly from your device.</p>
+            <h3 class="text-xl font-extrabold text-slate-900 mb-1" id="assignModalHeading">Upload Resource / Assignment</h3>
+            <p class="text-xs text-slate-500 mb-6">Upload documents, past papers, or attach video explanations.</p>
             
             <div class="mb-4">
                 <button id="upload_widget" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-file-arrow-up"></i> Select & Upload File (Cloudinary)
+                    <i class="fa-solid fa-file-arrow-up"></i> Upload Document via Cloudinary
                 </button>
             </div>
 
             <form id="addAssignmentForm" onsubmit="handleCreateAssignment(event)" class="space-y-4">
+                <input type="hidden" id="editAssignId">
                 <div>
                     <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Title</label>
                     <input type="text" id="assignTitle" required placeholder="e.g. Form 3 Biology Revision Quiz #2" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-edu-500 outline-none text-sm">
@@ -428,11 +404,21 @@
                     <textarea id="assignDesc" rows="2" required placeholder="Explain what students need to complete..." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-edu-500 outline-none text-sm resize-none"></textarea>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Resource Download Link (Auto-filled)</label>
-                    <input type="url" id="assignFileUrl" required placeholder="Upload file above or paste URL" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-edu-500 outline-none text-sm bg-slate-50">
+                    <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Resource / Document URL</label>
+                    <input type="url" id="assignFileUrl" required placeholder="Paste file URL or select file above" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-edu-500 outline-none text-sm bg-slate-50">
                 </div>
-                <button type="submit" class="w-full py-3 rounded-xl bg-edu-600 hover:bg-edu-700 text-white font-bold text-sm shadow-md transition-all mt-4">
-                    Publish to Students
+                
+                <!-- NEW FEATURE: Teacher Video Link -->
+                <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 space-y-1">
+                    <label class="block text-xs font-bold uppercase text-amber-900 flex items-center gap-1">
+                        <i class="fa-brands fa-youtube text-red-600"></i> Video Explanation URL (Optional)
+                    </label>
+                    <input type="url" id="assignVideoUrl" placeholder="e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ" class="w-full px-3 py-2 rounded-lg border border-amber-300 focus:ring-2 focus:ring-amber-500 outline-none text-xs bg-white">
+                    <p class="text-[10px] text-amber-700">Paste a YouTube or Vimeo link to embed an explanatory lesson for students.</p>
+                </div>
+
+                <button type="submit" id="submitAssignModalBtn" class="w-full py-3 rounded-xl bg-edu-600 hover:bg-edu-700 text-white font-bold text-sm shadow-md transition-all mt-4">
+                    Publish Assignment
                 </button>
             </form>
         </div>
@@ -487,7 +473,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Notes to Teacher (Optional)</label>
-                    <textarea rows="2" placeholder="e.g. I found question 3 challenging but completed all sections." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-edu-500 outline-none text-sm resize-none"></textarea>
+                    <textarea id="studentSubmissionNote" rows="2" placeholder="e.g. I found question 3 challenging but completed all sections." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-edu-500 outline-none text-sm resize-none"></textarea>
                 </div>
                 <button type="submit" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md transition-all">
                     Submit Work Now
@@ -496,17 +482,26 @@
         </div>
     </div>
 
+    <!-- Modal 7: Teacher Review Student Submissions & Comment Modal -->
+    <div id="manageSubmissionsModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[90vh] flex flex-col">
+            <button onclick="toggleModal('manageSubmissionsModal', false)" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h3 class="text-xl font-extrabold text-slate-900 mb-1" id="teacherManageTitle">Student Submissions</h3>
+            <p class="text-xs text-slate-500 mb-6">Review student work, grade performance, and leave teacher comments.</p>
+            
+            <div class="flex-grow overflow-y-auto space-y-4 pr-1" id="teacherSubmissionsList">
+                <!-- Dynamic submissions list injected here -->
+            </div>
+        </div>
+    </div>
+
     <!-- JAVASCRIPT STATE & APPLICATION LOGIC -->
     <script>
-        // CONFIGURATION
         const TEACHER_PIN = "1234";
-        
-        // REPLACE WITH YOUR CLOUDINARY CREDENTIALS
         const CLOUD_NAME = "Deogracious";
         const UPLOAD_PRESET = "ghulenms";
 
-        // Global State
-        let currentUser = null; // null, { name, role: 'student'|'teacher' }
+        let currentUser = null; 
         let selectedThreadId = 1;
 
         // Cloudinary Upload Widget Configuration
@@ -555,7 +550,12 @@
                 dueDate: "This Friday, 5:00 PM",
                 description: "Complete exercises 1 to 15 on page 42. Show all step-by-step working clearly.",
                 fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-                submitted: false
+                videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                submitted: false,
+                studentSubmissions: [
+                    { studentName: "Sarah Jenkins", date: "Yesterday, 3:15 PM", note: "Done all questions, attached my working sheet.", grade: "A", teacherComment: "Excellent step-by-step resolution!" },
+                    { studentName: "David Kim", date: "Today, 11:00 AM", note: "Question 12 was tricky but attempted.", grade: "Pending", teacherComment: "" }
+                ]
             },
             {
                 id: 2,
@@ -564,7 +564,11 @@
                 dueDate: "Next Monday, 9:00 AM",
                 description: "Read chapter 8 and draw reaction pathways for alkanes and alkenes.",
                 fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-                submitted: true
+                videoUrl: "",
+                submitted: true,
+                studentSubmissions: [
+                    { studentName: "Anita Ray", date: "2 days ago", note: "Diagrams included as requested.", grade: "A-", teacherComment: "Good work on alkanes!" }
+                ]
             }
         ];
 
@@ -622,7 +626,6 @@
             }, 3500);
         }
 
-        // Access Control Helper for Member-Only Actions
         function handleRestrictedAction(actionCallback, actionName = "access this feature") {
             if (!currentUser) {
                 showToast(`Please log in as a student or teacher to ${actionName}.`);
@@ -639,6 +642,17 @@
             } else {
                 window.open(link, '_blank');
             }
+        }
+
+        // Helper to convert standard Youtube links to Embed URLs
+        function getEmbedVideoUrl(url) {
+            if (!url) return null;
+            if (url.includes('youtube.com/watch?v=')) {
+                return url.replace('watch?v=', 'embed/');
+            } else if (url.includes('youtu.be/')) {
+                return url.replace('youtu.be/', 'youtube.com/embed/');
+            }
+            return url;
         }
 
         // Authentication Handlers
@@ -658,7 +672,7 @@
                 currentUser = { name: 'Teacher', role: 'teacher' };
                 toggleModal('teacherModal', false);
                 updateUserUI();
-                showToast("Teacher Access Authenticated!");
+                showToast("Teacher Control Panel Activated!");
             } else {
                 alert("Incorrect PIN! Access denied.");
             }
@@ -778,32 +792,62 @@
             const container = document.getElementById('assignmentList');
             const filtered = filter === 'all' ? assignmentsData : assignmentsData.filter(a => a.subject === filter);
 
-            container.innerHTML = filtered.map(a => `
+            const isTeacher = currentUser && currentUser.role === 'teacher';
+
+            container.innerHTML = filtered.map(a => {
+                const embedUrl = getEmbedVideoUrl(a.videoUrl);
+                const subCount = a.studentSubmissions ? a.studentSubmissions.length : 0;
+
+                return `
                 <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-4">
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
                             <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700">${a.subject}</span>
-                            ${a.submitted ? 
-                                `<span class="text-xs font-extrabold text-emerald-600 flex items-center gap-1"><i class="fa-solid fa-check-circle"></i> Turned In</span>` : 
-                                `<span class="text-xs font-bold text-amber-600"><i class="fa-solid fa-hourglass-half"></i> Pending</span>`}
+                            ${isTeacher ? 
+                                `<span class="text-xs font-extrabold text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-user-check"></i> ${subCount} Submitted</span>` :
+                                (a.submitted ? 
+                                    `<span class="text-xs font-extrabold text-emerald-600 flex items-center gap-1"><i class="fa-solid fa-check-circle"></i> Turned In</span>` : 
+                                    `<span class="text-xs font-bold text-amber-600"><i class="fa-solid fa-hourglass-half"></i> Pending</span>`)
+                            }
                         </div>
-                        <h3 class="font-bold text-base text-slate-900 mb-2">${a.title}</h3>
+                        <h3 class="font-bold text-base text-slate-900">${a.title}</h3>
                         <p class="text-xs text-slate-600 leading-relaxed">${a.description}</p>
+
+                        ${embedUrl ? `
+                            <div class="mt-3 rounded-xl overflow-hidden border border-slate-200 aspect-video bg-black">
+                                <iframe class="w-full h-full" src="${embedUrl}" title="Teacher Explanation Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                        ` : ''}
                     </div>
 
                     <div class="pt-4 border-t border-slate-100 space-y-3">
                         <p class="text-xs text-slate-400 font-medium"><i class="fa-solid fa-clock mr-1"></i> Due: ${a.dueDate}</p>
-                        <div class="flex gap-2">
-                            <a href="${a.fileUrl}" target="_blank" class="w-1/2 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1">
-                                <i class="fa-solid fa-download"></i> Material
+                        
+                        <div class="flex flex-col gap-2">
+                            <a href="${a.fileUrl}" target="_blank" class="w-full py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-download"></i> Download Study Notes/Materials
                             </a>
-                            <button onclick="handleRestrictedAction(function() { openSubmitModal(${a.id}, '${a.title}'); }, 'submit homework')" class="w-1/2 py-2 rounded-xl ${a.submitted ? 'bg-emerald-50 text-emerald-700' : 'bg-edu-600 text-white hover:bg-edu-700'} font-bold text-xs flex items-center justify-center gap-1">
-                                <i class="fa-solid fa-upload"></i> ${a.submitted ? 'Resubmit' : 'Submit Work'}
-                            </button>
+
+                            <!-- TEACHER WORKFLOW CONTROLS -->
+                            ${isTeacher ? `
+                                <div class="grid grid-cols-2 gap-2 pt-1">
+                                    <button onclick="openTeacherManageModal(${a.id})" class="py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center justify-center gap-1">
+                                        <i class="fa-solid fa-comments"></i> Submissions (${subCount})
+                                    </button>
+                                    <button onclick="openEditAssignmentModal(${a.id})" class="py-2 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs flex items-center justify-center gap-1">
+                                        <i class="fa-solid fa-pen-to-square"></i> Edit / Repost
+                                    </button>
+                                </div>
+                            ` : `
+                                <!-- STUDENT SUBMIT WORK BUTTON -->
+                                <button onclick="handleRestrictedAction(function() { openSubmitModal(${a.id}, '${a.title}'); }, 'submit homework')" class="w-full py-2 rounded-xl ${a.submitted ? 'bg-emerald-50 text-emerald-700' : 'bg-edu-600 text-white hover:bg-edu-700'} font-bold text-xs flex items-center justify-center gap-1">
+                                    <i class="fa-solid fa-upload"></i> ${a.submitted ? 'Resubmit Assignment' : 'Submit Work'}
+                                </button>
+                            `}
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         function filterAssignments(subject) {
@@ -934,21 +978,116 @@
 
         function handleCreateAssignment(e) {
             e.preventDefault();
-            const newAssign = {
-                id: Date.now(),
-                title: document.getElementById('assignTitle').value,
-                subject: document.getElementById('assignSubject').value,
-                dueDate: document.getElementById('assignDueDate').value,
-                description: document.getElementById('assignDesc').value,
-                fileUrl: document.getElementById('assignFileUrl').value,
-                submitted: false
-            };
+            const editId = document.getElementById('editAssignId').value;
 
-            assignmentsData.unshift(newAssign);
+            if (editId) {
+                // Update existing assignment
+                const item = assignmentsData.find(a => a.id === parseInt(editId));
+                if (item) {
+                    item.title = document.getElementById('assignTitle').value;
+                    item.subject = document.getElementById('assignSubject').value;
+                    item.dueDate = document.getElementById('assignDueDate').value;
+                    item.description = document.getElementById('assignDesc').value;
+                    item.fileUrl = document.getElementById('assignFileUrl').value;
+                    item.videoUrl = document.getElementById('assignVideoUrl').value;
+                    showToast("Assignment updated and reposted!");
+                }
+            } else {
+                // Create new assignment
+                const newAssign = {
+                    id: Date.now(),
+                    title: document.getElementById('assignTitle').value,
+                    subject: document.getElementById('assignSubject').value,
+                    dueDate: document.getElementById('assignDueDate').value,
+                    description: document.getElementById('assignDesc').value,
+                    fileUrl: document.getElementById('assignFileUrl').value,
+                    videoUrl: document.getElementById('assignVideoUrl').value,
+                    submitted: false,
+                    studentSubmissions: []
+                };
+                assignmentsData.unshift(newAssign);
+                showToast("Resource uploaded and published to students!");
+            }
+
             toggleModal('addAssignmentModal', false);
             document.getElementById('addAssignmentForm').reset();
+            document.getElementById('editAssignId').value = "";
             renderAll();
-            showToast("Resource uploaded and published to students!");
+        }
+
+        function openEditAssignmentModal(id) {
+            const item = assignmentsData.find(a => a.id === id);
+            if (!item) return;
+
+            document.getElementById('editAssignId').value = item.id;
+            document.getElementById('assignTitle').value = item.title;
+            document.getElementById('assignSubject').value = item.subject;
+            document.getElementById('assignDueDate').value = item.dueDate;
+            document.getElementById('assignDesc').value = item.description;
+            document.getElementById('assignFileUrl').value = item.fileUrl;
+            document.getElementById('assignVideoUrl').value = item.videoUrl || '';
+
+            document.getElementById('assignModalHeading').innerText = "Edit / Repost Assignment";
+            document.getElementById('submitAssignModalBtn').innerText = "Save & Repost Changes";
+
+            toggleModal('addAssignmentModal', true);
+        }
+
+        function openTeacherManageModal(assignId) {
+            const assign = assignmentsData.find(a => a.id === assignId);
+            if (!assign) return;
+
+            document.getElementById('teacherManageTitle').innerText = `Submissions: ${assign.title}`;
+            const listContainer = document.getElementById('teacherSubmissionsList');
+
+            if (!assign.studentSubmissions || assign.studentSubmissions.length === 0) {
+                listContainer.innerHTML = `<p class="text-sm text-slate-400 text-center py-8">No students have turned in this assignment yet.</p>`;
+            } else {
+                listContainer.innerHTML = assign.studentSubmissions.map((s, index) => `
+                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="font-extrabold text-sm text-slate-900">${s.studentName}</h4>
+                                <p class="text-[11px] text-slate-400">Turned in: ${s.date}</p>
+                            </div>
+                            <span class="px-3 py-1 rounded-full text-xs font-extrabold ${s.grade === 'Pending' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'}">
+                                Grade: ${s.grade}
+                            </span>
+                        </div>
+                        <div class="p-3 bg-white rounded-xl text-xs text-slate-700 border border-slate-100">
+                            <span class="font-bold text-slate-400 block mb-1">Student Notes:</span>
+                            "${s.note || 'No notes provided.'}"
+                        </div>
+                        
+                        <!-- Teacher Comment & Grade Form -->
+                        <div class="pt-2 border-t border-slate-200/60 space-y-2">
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
+                                <input type="text" id="gradeInput_${assignId}_${index}" value="${s.grade !== 'Pending' ? s.grade : ''}" placeholder="Grade (e.g. A, 85%)" class="px-3 py-1.5 rounded-lg border border-slate-200 text-xs outline-none">
+                                <input type="text" id="commentInput_${assignId}_${index}" value="${s.teacherComment || ''}" placeholder="Write feedback comment..." class="sm:col-span-3 px-3 py-1.5 rounded-lg border border-slate-200 text-xs outline-none">
+                            </div>
+                            <button onclick="saveTeacherFeedback(${assignId}, ${index})" class="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition-all">
+                                Save Feedback
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            toggleModal('manageSubmissionsModal', true);
+        }
+
+        function saveTeacherFeedback(assignId, subIndex) {
+            const assign = assignmentsData.find(a => a.id === assignId);
+            if (assign && assign.studentSubmissions[subIndex]) {
+                const gradeVal = document.getElementById(`gradeInput_${assignId}_${subIndex}`).value;
+                const commentVal = document.getElementById(`commentInput_${assignId}_${subIndex}`).value;
+
+                assign.studentSubmissions[subIndex].grade = gradeVal || "Graded";
+                assign.studentSubmissions[subIndex].teacherComment = commentVal;
+
+                showToast(`Feedback saved for ${assign.studentSubmissions[subIndex].studentName}!`);
+                renderAssignments();
+            }
         }
 
         function handleCreateThread(e) {
@@ -1020,9 +1159,19 @@
         function handleAssignmentSubmission(e) {
             e.preventDefault();
             const id = parseInt(document.getElementById('submitAssignId').value);
+            const noteText = document.getElementById('studentSubmissionNote').value;
             const item = assignmentsData.find(a => a.id === id);
+            
             if (item) {
                 item.submitted = true;
+                if (!item.studentSubmissions) item.studentSubmissions = [];
+                item.studentSubmissions.push({
+                    studentName: currentUser ? currentUser.name : "Logged In Student",
+                    date: "Just now",
+                    note: noteText || "Completed assignment submission.",
+                    grade: "Pending",
+                    teacherComment: ""
+                });
             }
             toggleModal('submitAssignmentModal', false);
             renderAll();
